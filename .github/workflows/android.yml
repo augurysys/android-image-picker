@@ -1,10 +1,8 @@
 name: Android CI
 
 on:
-  push:
-    branches: [master]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 jobs:
   build:
@@ -31,3 +29,13 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Build test
+        run: ./gradlew sample:assembleAndroidTest
+
+      - name: Run tests on Firebase Test Lab
+        uses: asadmansr/Firebase-Test-Lab-Action@v1.0
+        with:
+          arg-spec: 'firebasetest.yml:android-pixel-4'
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.SERVICE_ACCOUNT }}
